@@ -19,6 +19,8 @@ class ImporterController < ApplicationController
 
 		(2..spreadsheet.last_row).each do |i|
 			row = spreadsheet.row(i)
+			# shifts it one place over and returns previous
+			# this stores the numerical date into 'date'
 			date = row.shift
 
 			row.each_with_index do |val, i|
@@ -28,25 +30,7 @@ class ImporterController < ApplicationController
 			end
 		end
 
-		# @financials = FinancialElement.all.order(date: :asc)
-		puts " "
-		puts " "
-		puts " DOES THIS SHIT GET HERE? "
-		puts " "
-		puts " "
-
-		# @financials = FinancialElement.all
-		# puts @financials.all
-		# puts "financial.model_value :::"
-		# puts @financial.model_value
-
-		puts " "
-		puts " "
-		puts " ------****** GETS TO PUTS FINANCIAL "
-		puts " "
-		puts " "
-
-
+		# maybe think about redirecting it to another page for selecting
 		redirect_to importer_form_path
 	end
 

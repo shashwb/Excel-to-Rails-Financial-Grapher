@@ -2,10 +2,14 @@
 <html>
 <head>
 	<title>Exante Data Example</title>
-	<script src="https://code.highcharts.com/highcharts.js"></script>
+<!-- 	<script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<script src="http://code.highcharts.com/stock/highstock.js"></script>
 	<!-- google sheets api -->
 	<script src="https://code.highcharts.com/modules/data.js"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+<!-- 	<script src="https://code.highcharts.com/modules/exporting.js"></script> -->
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -14,13 +18,34 @@
 
 	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://www.highcharts.com/samples/data/usdeur.js"></script>
+
+	<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 
 </head>
 
 <body>
 
+
+<div class='wrapper'>
+    <form id='nameForm'>
+    <div class='form-uname'>
+        <lable id='nameLable' for='nameField'>Create a username:</lable>
+        <input id='nameField' type='text' maxlength='25'></input>
+    </div>
+    <div class='form-sub'>
+        <button id='subButton' type='button'>Print your name!</button>
+    </div>
+</form>
+
+<div>
+    <p id='result'></p></div>
+</div>
+
+
 	<!-- container for the chart -->
 	<div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
+	<div id="container2" style="width:100%; height:400px; padding-top: 40px;"></div>
 	<h1 style="text-align: center; padding-top: 100px; padding-bottom: 25px;">Import Financial Elements from Excel file</h1>
 	<div style="text-align: center; padding-bottom: 80px; align-content: center; ">
 
@@ -64,6 +89,7 @@
 	    </div>
 	</div>
 
+
 	<div style="height: 1000px;">
 	<% @financials.each do |financial| %>
   		<span>
@@ -77,34 +103,75 @@
 
 
 
-
 </body>
 
-<script type="text/javascript">
+
+<script>
 
 	$(function () { 
-    var myChart = Highcharts.chart('container', {
-        chart: {
-            type: 'line'
-        },
-        title: {
-            text: 'Exante Data Time Series Analysis'
-        },
-        xAxis: {
-            text: 'Time Series'
-        },
-        // series: [{
-        //     name: 'Jane',
-        //     data: [1, 0, 4]
-        // }, {
-        //     name: 'John',
-        //     data: [5, 7, 3, 10]
-        // }]
-        data: {
-			googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs'
-		}
-    });
+
+		function getUserName() {
+    		var nameField = document.getElementById('nameField').value;
+    		var result = document.getElementById('result');
+    
+        	result.textContent = 'Your username is: ' + nameField;
+
+        	var myChart2 = Highcharts.chart('container2', {
+		        chart: {
+		            type: 'line'
+		        },
+		        rangeSelector: {
+		        	enabled: true
+		        },
+		        title: {
+		            text: 'Exante Data Time Series Analysis'
+		        },
+		        xAxis: {
+		            text: 'Time Series'
+		        },
+		        series: [{
+		        	name: 'first',
+		        	data: [{
+		        		googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs'
+		        	}]
+		        	,
+					name: 'second',
+					data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5
+					]
+		        }]
+		  //       data: {
+				// 	googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs',
+				// 	googleSpreadsheetWorksheet: nameField
+				// }
+	    	});
+
+	}
+		console.log("NAMEFIELD outside of funciton");
+		console.log(nameField);
+		var subButton = document.getElementById('subButton');
+		subButton.addEventListener('click', getUserName, false);
+		console.log("event handler called");
+
+	    var myChart = Highcharts.chart('container', {
+	        chart: {
+	            type: 'line'
+	        },
+	        rangeSelector: {
+	        	enabled: true
+	        },
+	        title: {
+	            text: 'Overall Exante Data Financial Time Series'
+	        },
+	        xAxis: {
+	            text: 'Time Series'
+	        },
+	        data: {
+				googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs'
+			}
+	    });
 });
+
+
 
 </script>
 
