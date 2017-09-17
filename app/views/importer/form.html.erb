@@ -8,26 +8,63 @@
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
 
 	<!-- container for the chart -->
-	<div id="container" style="width:100%; height:400px;"></div>
-
-	<h1 style="text-align: center">Import Financial Elements from Excel file</h1>
-
-	<div style="text-align: center; padding-bottom: 80px; ">
+	<div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
+	<h1 style="text-align: center; padding-top: 100px; padding-bottom: 25px;">Import Financial Elements from Excel file</h1>
+	<div style="text-align: center; padding-bottom: 80px; align-content: center; ">
 
 		<%= form_tag import_helper_path, multipart: true do %>
-  			<%= file_field_tag :file, required: true %>
+			<p style="display: inline-block;"><%= file_field_tag :file, required: true %></p>
   			<%= submit_tag "Import" %>
 		<% end %>
 
 	</div>
 
+	<h1 style="text-align: center; padding-bottom: 25px;">Select a Time Series</h1>
 
+	<div id="event_period" class="row" style="text-align: center; padding-bottom: 80px;">
+	    <div class="col-sm-1">
+	      <label for="start_date">Start date</label>
+	    </div>
+
+	    <div class="col-sm-3">
+	      <div class="input-group">
+	        <input type="text" class="actual_range form-control datepicker" id="start_date" name="start_date">
+	        <div class="input-group-addon">
+	          <span class="glyphicon glyphicon-th"></span>
+	        </div>
+	      </div>
+	    </div>
+
+	    <div class="col-sm-1 col-sm-offset-1">
+	      <label for="end_date">End date</label>
+	    </div>
+
+	    <div class="col-sm-3">
+	      <div class="input-group">
+	        <input type="text" class="actual_range form-control datepicker" id="end_date" name="end_date">
+	        <div class="input-group-addon">
+	          <span class="glyphicon glyphicon-th"></span>
+	        </div>
+	      </div>
+	    </div>
+
+	    <div class="col-sm-2">
+	    </div>
+	</div>
+
+	<div style="height: 1000px;">
 	<% @financials.each do |financial| %>
   		<span>
     		<%= financial.day %>
@@ -36,8 +73,10 @@
   		</span>
   		<p></p>
 	<% end %>
+	</div>
 
-	<h1 style="text-align: center">Import Financial Elements from Excel file</h1>
+
+
 
 </body>
 
@@ -52,14 +91,8 @@
             text: 'Exante Data Time Series Analysis'
         },
         xAxis: {
-            // categories: ['Apples', 'Bananas', 'Oranges', 'blah']
             text: 'Time Series'
         },
-        // yAxis: {
-        //     title: {
-        //         text: 'Fruit eaten'
-        //     }
-        // },
         // series: [{
         //     name: 'Jane',
         //     data: [1, 0, 4]
@@ -69,7 +102,6 @@
         // }]
         data: {
 			googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs'
-			// googleSpreadsheetKey: 
 		}
     });
 });
