@@ -1,10 +1,9 @@
 class ImporterController < ApplicationController
+
+	def index
+	end
+
 	def form
-		puts " "
-		puts " "
-		puts "REACHED THE FORM METHOD"
-		puts " "
-		puts " "
 		@financials = FinancialElement.all
 		puts @financials.all
 
@@ -31,7 +30,7 @@ class ImporterController < ApplicationController
 		end
 
 		# maybe think about redirecting it to another page for selecting
-		redirect_to importer_form_path
+		redirect_to graph_path
 	end
 
 

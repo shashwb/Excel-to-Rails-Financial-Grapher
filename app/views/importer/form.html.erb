@@ -15,9 +15,28 @@
 	<script type="text/javascript" src="https://www.highcharts.com/samples/data/usdeur.js"></script>
 
 	<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+
+	<style>
+      body {
+        padding-top: 54px;
+        background-color: #f2f0e4;
+        color: #00667F;
+      }
+
+
+    </style>
 </head>
 
 <body>
+<div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5">Financial Data Tracker</h1>
+          <p class="lead" style="color: #e87642; font-size: 48px; ">Exante Data</p>
+        </div>
+      </div>
+    </div>
+	<h1 class="text-center" style="padding-top: 15px; padding-bottom: 50px;font-size: 36px;"> Interact with Default Financial Data or Input Your Own Excel Data for Graphical Analysis</h2>
 	<!-- container for the chart -->
 	<div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
 	<div class='wrapper' style="text-align: center; padding-top: 25px">
@@ -74,8 +93,54 @@
 		function getUserName() {
     		var nameField = document.getElementById('nameField').value;
     		var result = document.getElementById('result');
+
+    		if (nameField == "EURUSD Currency") {
+    			nameField = 2;
+    		} else if (nameField == "EURGBP Currency") {
+    			nameField = 3;
+    		} else if (nameField == "EEREE 21") {
+    			nameField = 4;
+    		} else if (nameField == "Ez BOP (eq)" || nameField == "EZ BOP (eq)") {
+    			nameField = 5;
+    		} else if (nameField == "Ez BOP (bonds)" ||
+    				 nameField == "EZ BOP (bonds)") {
+    			nameField = 6;
+    		} else if (nameField == "US TIC Flows" || nameField == "US TIC flows") {
+    			nameField == 7;
+    		} else {
+    			nameField = "Invalid Command, Try Again Bro";
+    		}
+
+
+    		// switch(nameField) {
+    		// 	case "Everything":
+    		// 		nameField = 1;
+    		// 	break;
+
+    		// 	case "All"
+    		// 		nameField = 1;
+    		// 	break;
+
+    		// 	case "EURUSD Curerncy":
+    		// 	 	nameField = 2
+    		// 	break;
+
+    		// when "EURGBP Currency"
+    		// 	 nameField = 3
+    		// when "EEREE 21"
+    		// 	 nameField = 4
+    		// when "Ez BOP (eq)"
+    		// 	 nameField = 5
+    		// when "Ez BOP (bonds)"
+    		// 	 nameField = 6
+    		// when "US TIC flows"
+    		// 	 nameField = 7
+
+    		// 	default: 
+    		// 		nameField = "Invalid Bro, Sorry"
+    		// }
     
-        	result.textContent = 'Your username is: ' + nameField;
+        	result.textContent = 'Category Selected: ' + nameField;
 
         	var myChart2 = Highcharts.chart('container2', {
 		        chart: {
