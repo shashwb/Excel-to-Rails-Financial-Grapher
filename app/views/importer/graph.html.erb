@@ -1,0 +1,58 @@
+<h1>Graph</h1>
+
+<%= image_tag '/graph.png', alt: 'No graph to be shown' %>
+
+<br>
+
+<h3>Data Received</h3>
+Category 1: <%= @category1 %><br>
+Category 2: <%= @category2 %><br>
+Start date: <%= @chosen_start_date %><br>
+End date: <%= @chosen_end_date %><br>
+Category 1 Data: <%= @category1_data %><br>
+Category 2 Data: <%= @category2_data %><br>
+Dates: <%= @dates %><br>
+
+<br>
+
+<h3>Form</h3>
+<%= form_tag graph_path, method: :get do %>
+	Category 1: 
+	<br><br>
+	<% @categories.each do |category| %>
+		<%= radio_button_tag(:category1, category, required: 'required') %>
+		<%= label_tag(:category1, category) %>
+		<br>
+	<% end %>
+
+	<br><br>
+	
+	Category 2:
+	<br><br>
+	<% @categories.each do |category| %>
+		<%= radio_button_tag(:category2, category, required: 'required') %>
+		<%= label_tag(:category2, category) %>
+		<br>
+	<% end %>
+
+	<br><br>
+
+	<%= text_field_tag :daterange, "", name: 'daterange', size: 24 %>
+
+	<br><br>
+
+	<%= submit_tag "Redefine search" %>
+
+<% end %>
+
+<script type="text/javascript">
+	$(function() {
+		$('input[name="daterange"]').daterangepicker({
+			"startDate": "<%= @start_date.strftime('%m/%d/%Y') %>",
+			"endDate": "<%= @end_date.strftime('%m/%d/%Y') %>"
+		})
+	})
+</script>
+
+
+

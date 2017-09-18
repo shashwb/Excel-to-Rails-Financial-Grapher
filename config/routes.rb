@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   get '/importer', to: 'importer#form', as: 'importer_form'
   post '/', to: 'importer#import', as: 'import_helper'
+
+  get '/graph', to: 'importer#graph', as: 'graph'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

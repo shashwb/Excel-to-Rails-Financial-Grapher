@@ -26,6 +26,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'rb-readline'
 
 gem 'roo', '~> 2.7.0'
+gem 'gruff'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

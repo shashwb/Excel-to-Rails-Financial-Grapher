@@ -69,6 +69,8 @@ GEM
       activesupport (>= 4.2.0)
     groupdate (3.2.0)
       activesupport (>= 3)
+    gruff (0.7.0)
+      rmagick (~> 2.13, >= 2.13.4)
     i18n (0.8.6)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
@@ -123,6 +125,7 @@ GEM
       ffi (>= 0.5.0, < 2)
     rb-readline (0.5.5)
     rdoc (4.3.0)
+    rmagick (2.16.0)
     roo (2.7.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
@@ -176,6 +179,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   groupdate
+  gruff
   jbuilder (~> 2.0)
   jquery-rails
   rails (= 4.2.2)
