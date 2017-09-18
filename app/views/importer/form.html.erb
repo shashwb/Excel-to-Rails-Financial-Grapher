@@ -42,7 +42,8 @@
 	<div class='wrapper' style="text-align: center; padding-top: 25px">
     <form id='nameForm'>
     <div class='form-uname'>
-        <lable id='nameLable' for='nameField'>Select Category to View in Single Graph</lable><br><br>
+        <lable id='nameLable' for='nameField'>Select Category to View in Single Graph</lable>
+        <p style="color: #e87642">EURUSD Currency | EURGBP Currency | EEREE 21 | Ez BOP (eq) | Ez BOP (bonds) | US TIC flows</p><br><br>
         <input id='nameField' type='text' maxlength='25'></input><br><br>
     	</div>
     	<div class='form-sub'>
@@ -54,12 +55,17 @@
 	</div>
 	<div id="container2" style="width:100%; height:400px; padding-top: 40px;"></div>
 	<h1 style="text-align: center; padding-top: 100px; padding-bottom: 25px;">Or Import Your Own Financial Elements from Excel file</h1>
+	<h3 style="text-align: center; padding-bottom: 25px; color: #e87642">If there is already data in database, just 'Enter Grapher'</h3>
 	<div style="text-align: center; padding-bottom: 80px; align-content: center; ">
 
 		<%= form_tag import_helper_path, multipart: true do %>
 			<p style="display: inline-block;"><%= file_field_tag :file, required: true %></p>
   			<%= submit_tag "Import" %>
 		<% end %>
+		<a href="/graph">
+			<% link_to "Grapher", '/graph' %>
+			<button class= 'btn btn-primary-lrg'>Enter Grapher</button>
+		</a>
 
 	</div>
 
