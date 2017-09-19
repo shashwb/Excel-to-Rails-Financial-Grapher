@@ -80,7 +80,7 @@ class ImporterController < ApplicationController
 
 	def graph_creator(category1, category2, category1_data, category2_data, dates)
 		g = Gruff::Line.new
-		g.title = "#{dates.first} --> #{dates.last}"
+		g.title = "#{dates.first} to #{dates.last}"
 		labels = Hash.new
 		max_length =  5 < dates.length ? 5 : dates.length
 		(0..dates.length - 1).step(dates.length / max_length).each do |ind|

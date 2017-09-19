@@ -1,6 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Financial Data Tracker</title>
+	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<script src="http://code.highcharts.com/stock/highstock.js"></script>
+	<!-- google sheets api -->
+	<script src="https://code.highcharts.com/modules/data.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://www.highcharts.com/samples/data/usdeur.js"></script>
+
+	<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+	<script src="//rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js"> </script>
+
+	<style>
+      body {
+        padding-top: 54px;
+        background-color: #f2f0e4;
+        color: #00667F;
+      }
+
+
+    </style>
+</head>
+<body>
+
 <h1 style="text-align: center">Graph</h1>
 
 <%= image_tag '/graph.png', alt: 'No graph to be shown' %>
+
+<div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
+<button id="button">Add 3 Series</button>
+<div id="container1" style="width:100%; height:400px; padding-top: 40px;"></div>
 
 <br>
 
@@ -45,13 +80,79 @@ Dates: <%= @dates %><br>
 
 <% end %>
 
+</body>
+
 <script type="text/javascript">
-	$(function() {
-		$('input[name="daterange"]').daterangepicker({
-			"startDate": "<%= @start_date.strftime('%m/%d/%Y') %>",
-			"endDate": "<%= @end_date.strftime('%m/%d/%Y') %>"
-		})
-	})
+	// $(function() {
+	// 	$('input[name="daterange"]').daterangepicker({
+	// 		"startDate": "<%= @start_date.strftime('%m/%d/%Y') %>",
+	// 		"endDate": "<%= @end_date.strftime('%m/%d/%Y') %>"
+	// 	})
+	// })
+
+
+	$(function () { 
+
+		var array1 = <%= @category1_data.inspect.html_safe %>;
+		var array2 = <%= @category2_data.inspect.html_safe %>;
+		var final_array = [];
+		for (var i = 0; i < array1.length; i++) {
+			final_array[i] = [array1[i], array2[i]];
+		}
+
+		console.log(array1);
+		console.log(array2);
+		console.log(final_array);
+		console.log(final_array.length)
+
+
+
+
+	    var myChart = Highcharts.chart('container', {
+	        chart: {
+	            type: 'scatter',
+	            zoomType: 'xy'
+	        },
+	        rangeSelector: {
+	        	enabled: true
+	        },
+	        title: {
+	            text: 'Overall Exante Data Financial Time Series'
+	        },
+	        xAxis: {
+	            text: 'Time Series'
+	            // type: 'datetime'
+	        },
+	        series: [{
+                regression: true ,
+                regressionSettings: {
+                    type: 'linear',
+                    color:  'rgba(223, 83, 83, .9)'
+                },
+                name: 'Female',
+                data: final_array
+    
+            }]
+	     //    series: [{
+      //           regression: true ,
+      //           regressionSettings: {
+      //               type: 'linear',
+      //               color:  'rgba(223, 83, 83, .9)'
+      //           },
+      //   		name: 'Category 1',
+      //   		data: array1
+    		// }, {
+      //   		name: 'Category 2',
+      //   		data: array2
+    		// }]
+	  //       data: {
+			// 	googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs'
+			// }
+	    });
+
+});
+
+
 </script>
 
 
