@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>Financial Data Tracker</title>
-	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
 	<script src="http://code.highcharts.com/stock/highstock.js"></script>
+	<!-- <script src="//rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js"> </script> -->
 	<!-- google sheets api -->
 	<script src="https://code.highcharts.com/modules/data.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -12,9 +12,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://www.highcharts.com/samples/data/usdeur.js"></script>
 
-	<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/regression/1.4.0/regression.min.js"></script> -->
 	<script src="//rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js"> </script>
 
 	<style>
@@ -24,61 +23,89 @@
         color: #00667F;
       }
 
+      #graph_container {
+    	margin-top: 50px;
+    	margin-left: 25%;
+      }
+
+      #data_description {
+      	text-align: center;
+      }
+
+      .data {
+      	color: #e87642;
+      }
+
 
     </style>
 </head>
 <body>
 
-<h1 style="text-align: center">Graph</h1>
+<div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5">Financial Data Tracker</h1>
+          <p class="lead" style="color: #e87642; font-size: 48px; ">Exante Data</p>
+        </div>
+      </div>
+</div>
 
-<%= image_tag '/graph.png', alt: 'No graph to be shown' %>
+<h1 style="text-align: center; font-size: 48px;">Grapher</h1>
+
+<div id="graph_container" style="width: 100%;">
+	<%= image_tag '/graph.png', alt: 'No graph to be shown' %>
+</div>
 
 <div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
-<button id="button">Add 3 Series</button>
 <div id="container1" style="width:100%; height:400px; padding-top: 40px;"></div>
+<div id="container2" style="width:100%; height:400px; padding-top: 40px;"></div>
+
 
 <br>
 
-<h3>Data Received</h3>
-Category 1: <%= @category1 %><br>
-Category 2: <%= @category2 %><br>
-Start date: <%= @chosen_start_date %><br>
-End date: <%= @chosen_end_date %><br>
-Category 1 Data: <%= @category1_data %><br>
-Category 2 Data: <%= @category2_data %><br>
-Dates: <%= @dates %><br>
+<div id="data_description">
+	<h3>Data Received</h3>
+	<b>Category 1:</b><br> <p class="data"><%= @category1 %></p><br><br>
+	<b>Category 2:</b><br> <p class="data"><%= @category2 %></p><br><br>
+	<b>Start date:</b><br> <p class="data"><%= @chosen_start_date %></p><br><br>
+	<b>End date:</b><br> <p class="data"><%= @chosen_end_date %></p><br><br>
+	<b>Category 1 Data:</b><br> <p class="data"><%= @category1_data %></p><br><br>
+	<b>Category 2 Data:</b><br> <p class="data"><%= @category2_data %></p><br><br>
+	<b>Dates:</b><br> <p class="data"><%= @dates %></p><br><br>
 
-<br>
+	<br>
 
-<h3>Form</h3>
-<%= form_tag graph_path, method: :get do %>
-	Category 1: 
-	<br><br>
-	<% @categories.each do |category| %>
-		<%= radio_button_tag(:category1, category, required: 'required') %>
-		<%= label_tag(:category1, category) %>
-		<br>
+	<h3>Form</h3>
+	<%= form_tag graph_path, method: :get do %>
+		Category 1: 
+		<br><br>
+		<% @categories.each do |category| %>
+			<%= radio_button_tag(:category1, category, required: 'required') %>
+			<%= label_tag(:category1, category) %>
+			<br>
+		<% end %>
+
+		<br><br>
+		
+		Category 2:
+		<br><br>
+		<% @categories.each do |category| %>
+			<%= radio_button_tag(:category2, category, required: 'required') %>
+			<%= label_tag(:category2, category) %>
+			<br>
+		<% end %>
+
+		<br><br>
+
+		<%= text_field_tag :daterange, "", name: 'daterange', size: 24 %>
+
+		<br><br>
+
+		<%= submit_tag "Redefine search" %>
+
 	<% end %>
+</div>
 
-	<br><br>
-	
-	Category 2:
-	<br><br>
-	<% @categories.each do |category| %>
-		<%= radio_button_tag(:category2, category, required: 'required') %>
-		<%= label_tag(:category2, category) %>
-		<br>
-	<% end %>
-
-	<br><br>
-
-	<%= text_field_tag :daterange, "", name: 'daterange', size: 24 %>
-
-	<br><br>
-
-	<%= submit_tag "Redefine search" %>
-
-<% end %>
 
 </body>
 
@@ -89,6 +116,7 @@ Dates: <%= @dates %><br>
 	// 		"endDate": "<%= @end_date.strftime('%m/%d/%Y') %>"
 	// 	})
 	// })
+
 
 
 	$(function () { 
@@ -104,6 +132,8 @@ Dates: <%= @dates %><br>
 		console.log(array2);
 		console.log(final_array);
 		console.log(final_array.length)
+
+
 
 
 
@@ -127,30 +157,200 @@ Dates: <%= @dates %><br>
                 regression: true ,
                 regressionSettings: {
                     type: 'linear',
-                    color:  'rgba(223, 83, 83, .9)'
+                    color:  'rgba(223, 83, 83, .9)',
+                    name: "%eq | r2: %r"
                 },
                 name: 'Female',
                 data: final_array
     
             }]
-	     //    series: [{
-      //           regression: true ,
-      //           regressionSettings: {
-      //               type: 'linear',
-      //               color:  'rgba(223, 83, 83, .9)'
-      //           },
-      //   		name: 'Category 1',
-      //   		data: array1
-    		// }, {
-      //   		name: 'Category 2',
-      //   		data: array2
-    		// }]
-	  //       data: {
-			// 	googleSpreadsheetKey: '1eQ-bJShsH4iGgFWWk8rtgEYeqMnP3K-PsyyWDcmMZGs'
-			// }
 	    });
 
+	    console.log("hello");
+
+	    var myChart2 = Highcharts.chart('container1', {
+	        chart: {
+	            type: 'scatter',
+	            zoomType: 'xy'
+	        },
+	        rangeSelector: {
+	        	enabled: true
+	        },
+	        title: {
+	            text: 'Overall Exante Data Financial Time Series'
+	        },
+	        xAxis: {
+	            text: 'Time Series'
+	            // type: 'datetime'
+	        },
+	        series: [{
+                regression: true ,
+                regressionSettings: {
+                    type: 'linear',
+                    color:  'rgba(223, 83, 83, .9)',
+                    name: "%eq | r2: %r"
+                },
+                name: 'Female',
+                data: final_array
+    
+            }]
+	    });
+
+
+
+
+	    var myChart3 = Highcharts.chart('container2', {
+	    // $('#container2').highcharts({
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Height Versus Weight of 507 Individuals by Gender'
+            },
+            subtitle: {
+                text: 'Source: Heinz  2003'
+            },
+            xAxis: {
+                title: {
+                    enabled: true,
+                    text: 'Height (cm)'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: 'Weight (kg)'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 100,
+                y: 70,
+                floating: true,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 1
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.x} cm, {point.y} kg'
+                    }
+                }
+            },
+            series: [{
+                regression: true ,
+                regressionSettings: {
+                    type: 'linear',
+                    color:  'rgba(223, 83, 83, .9)'
+                },
+                name: 'Female',
+                color: 'rgba(223, 83, 83, .5)',
+                // data: [[x0, y0], [xf, yf]]
+    
+            }]
+        });
+
+	    console.log("after myChart2");
+
+
+	 //    var data = [[11.6,14.7],[12.2,15.9],[10.7,14.8],[14,11.7],[12.5,13.2],[10,11.3],[10.1,11],[13.5,19.1]];
+		// var slope = regression('linear', data);
+
+		// var m = slope.equation[0], b = slope.equation[1];
+
+		// console.log("m (slope): ")
+		// console.log(m);
+
+		// var xs = [], ys = [];
+
+		// data.forEach(function(d){
+		//    	xs.push(d[0]);
+		//     ys.push(d[1]);
+		// });
+
+		// var x0 = Math.min.apply(null, xs), 
+		//     y0 = m*x0 + b;
+		// var xf = Math.max.apply(null, xs), 
+		//     yf = m*xf + b;
+
+		// var myChart = Highcharts.chart('container2', {
+		//     chart: {
+		//         type: 'scatter',
+		//         zoomType: 'xy'
+		//     },
+		//     plotOptions: {
+		//         scatter: {
+		//             marker: {
+		//                 radius: 5,
+		//                 states: {
+		//                     hover: {
+		//                         enabled: true,
+		//                         lineColor: 'rgb(100,100,100)'
+		//                     }
+		//                 }
+		//             },
+		//             states: {
+		//                 hover: {
+		//                     marker: {
+		//                         enabled: false
+		//                     }
+		//                 }
+		//             },
+		//             tooltip: {
+		//                 headerFormat: '<b>{series.name}</b><br>',
+		//                 pointFormat: '{point.x} cm, {point.y} kg'
+		//             }
+		//         }
+		//     },
+		//     series: [
+		//         {
+		//             type: 'line',
+		//             name: 'Regression Line',
+		//             data: [[x0, y0], [xf, yf]], 
+		//             marker: {
+		//                 enabled: false
+		//             },
+		//             states: {
+		//                 hover: {
+		//                     lineWidth: 0
+		//                 }
+		//             },
+		//             enableMouseTracking: false
+		//         },
+		//         {
+		//         name: 'Water Temperature vs. Air Temperature',
+		//         color: 'rgba(119, 152, 191, .5)',
+		//         data: data
+		//     }]
+		// });
+
+
+
 });
+
+
 
 
 </script>
