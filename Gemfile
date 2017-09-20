@@ -27,6 +27,9 @@ gem 'rb-readline'
 
 gem 'roo', '~> 2.7.0'
 gem 'gruff'
+gem 'bootstrap-datepicker-rails'
+
+# gem 'lazy_high_charts', '1.3.3'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -53,8 +56,7 @@ gem 'groupdate'
 
 gem 'bootstrap-sass'
 
-gem 'bootstrap-datepicker-rails', :require => 'bootstrap-datepicker-rails',
-                              :git => 'git://github.com/Nerian/bootstrap-datepicker-rails.git'
+gem 'bootstrap-datepicker-rails'
 
 
 group :production do
