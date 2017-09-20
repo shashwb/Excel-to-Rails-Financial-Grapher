@@ -102,7 +102,11 @@
 
 	<h1 style="text-align: center; padding-bottom: 30px;">Current State of the Database</h1>
 
+	<div style="text-align: center; margin-bottom: 100px;">
+			<button id="database-button" class='btn btn-primary-lrg'>Toggle Database View</button>
+	</div>
 
+	<div id="database">
 	<table style="text-align: center; width: 100%;">
 		<tr style="text-align: center;">
 			<th>Date</th>
@@ -117,6 +121,7 @@
   		</tr>
 		<% end %>
 	</table>
+	</div>
 
 
 </body>
@@ -125,6 +130,18 @@
 <script>
 
 	$(function () { 
+
+		$('#container2').hide();
+		$('#database').hide();
+
+
+		$('#subButton').on('click', function() {
+			$('#container2').toggle();
+		})
+
+		$('#database-button').on('click', function() {
+			$('#database').toggle();
+		})
 
 		function getUserName() {
     		var nameField = document.getElementById('nameField').value;

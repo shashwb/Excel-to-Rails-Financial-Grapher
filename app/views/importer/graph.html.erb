@@ -24,10 +24,10 @@
         color: #00667F;
       }
 
-      #graph_container {
+/*      #graph_container {
     	margin-top: 50px;
     	margin-left: 30%;
-      }
+      }*/
 
       #data_description {
       	text-align: center;
@@ -41,6 +41,29 @@
       	padding-left: 25%;
       	padding-right: 25%;
       }
+
+      #center_divs {
+      	display: table;
+      	width: 100%;
+      }
+
+      #center_divs > div {
+      	text-align: center;
+      	display: table-cell;
+      	padding: 1em;
+      	width: 50%;
+      }
+
+      #timeSeriesForm {
+      	text-align: center;
+      }
+
+      #submit {
+      	text-align: center;
+      	margin-bottom: 50px;
+      }
+
+
 
 
     </style>
@@ -70,7 +93,7 @@
 			Importer
 		</a>
       	</li>
-         <li class = "active"><a href = "/graph">Grapher</a></li>
+         <li class="active"><a href = "/graph">Grapher</a></li>
 			
 			
       </ul>
@@ -87,11 +110,9 @@
       </div>
 </div>
 
-<h1 style="text-align: center; font-size: 48px;">Grapher</h1>
+<h1 style="text-align: center; font-size: 48px; margin-bottom: 80px;">Grapher</h1>
 
-<div id="graph_container" style="margin: 0 auto; auto horizontal margin">
-	<%= image_tag '/graph.png', alt: 'No graph to be shown' %>
-</div>
+<img src="/graph.png" class="img-responsive" alt="Cinque Terre">
 
 <div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
 <div id="container1" style="width:100%; height:400px; padding-top: 40px;"></div>
@@ -114,11 +135,14 @@
 
 	<br>
 </div>
+<div id="timeSeriesForm">
+<h3 style="font-size: 26px;">Enter Time Series and Financial Element Category</h3>
 
-<div style:"display: inline-block">
-	<span>
+		<br><br>
+</div>
+<div id="center_divs">
 
-	<h3>Form</h3>
+<div>
 	<%= form_tag graph_path, method: :get do %>
 		Category 1: 
 		<br><br>
@@ -129,10 +153,9 @@
 		<% end %>
 
 		<br><br>
-	</span>
+</div>
 
-	<span>
-		
+<div>	
 		Category 2:
 		<br><br>
 		<% @categories.each do |category| %>
@@ -142,14 +165,12 @@
 		<% end %>
 
 		<br><br>
-	</span>
 </div>
-
+</div>
+	<div id="submit">
 		<%= text_field_tag :daterange, "", name: 'daterange', size: 24 %>
-
-		<br><br>
-
 		<%= submit_tag "Redefine search" %>
+	</div>
 
 	<% end %>
 <!-- </div> -->
@@ -173,7 +194,16 @@
 
 		var array1 = <%= @category1_data.inspect.html_safe %>;
 		var array2 = <%= @category2_data.inspect.html_safe %>;
+		// var dates = <%= @dates[6] %>
+		var dates = [];
+
+
+		for (var strInd = 0; strInd < array1.length; strInd++) {
+			
+		}
+
 		var final_array = [];
+		var another_array = [];
 		for (var i = 0; i < array1.length; i++) {
 			final_array[i] = [array1[i], array2[i]];
 		}
@@ -181,8 +211,19 @@
 
 		var m = slope.equation[0], b = slope.equation[1];
 
+		for (var j = 0; j < array1.length; j++) {
+			another_array[j] = [array1[j], (array1[j] * m)];
+			// another_array = array1[i] * m;
+		}
+
 		console.log("m (slope): ")
 		console.log(m);
+
+		console.log("dates");
+		console.log(dates);
+
+		console.log("another_array:");
+		console.log(another_array);
 
 		console.log(array1);
 		console.log(array2);
@@ -210,15 +251,26 @@
                     color:  'rgba(223, 83, 83, .9)',
                     name: "%eq | r2: %r |"
                 },
-                name: 'Female',
+                name: 'Regression Value',
                 data: final_array
     
-            }]
+            }
+            , {
+            	regression: true,
+            	regressionSettings: {
+            		type: 'linear',
+            		color: 'rgba(133, 44, 11, .9',
+            	},
+            	name: 'Beta Value',
+            	data: another_array
+            }
+            ]
 	    });
 
 	    var myChart = Highcharts.chart('container', {
 	        chart: {
-	            type: 'line'
+	            type: 'line',
+	            zoomType: 'xy'
 	        },
 	        rangeSelector: {
 	        	enabled: true
