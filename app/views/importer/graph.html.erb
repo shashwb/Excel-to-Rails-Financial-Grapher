@@ -173,20 +173,14 @@
 
 <script type="text/javascript">
 
-	// console.log("daterangepicker --->");
-	// console.log($('input[name="daterange"]'));
 
 	function linearRegression(arr1, arr2) {
 		console.log("LINEAR EQUATION FUNCTION CALLED");
 		var arr1_size = arr1.length;
 		var arr2_size = arr2.length;
-		console.log("array1 size -> " + arr1_size);
-		console.log("array2 size -> " + arr2_size);
 		if (arr1_size != arr2_size) {
 			alert("Error...exiting");
 		}
-
-		//calculate sums
 		var x_sum = sumOfArray(arr1);
 		var y_sum = sumOfArray(arr2);
 		console.log("x sum -> " + x_sum);
@@ -194,8 +188,6 @@
 		var xx_sum = 0;
 		var xy_sum = 0;
 		var yy_sum = 0;
-
-		console.log("for the for loop... arr1.length -> " + arr1.length);
 
 		for (var i = 0; i < arr1.length; i++) {
 			xx_sum += (arr1[i] * arr1[i]);
@@ -219,36 +211,6 @@
 		return equationArray;
 	}
 
-	// function calculateRollingRegression(array1, array2) {
-	// 	var rsquared = 0;
-	// 	var rsquaredArray = [];	//store the final RSquared values
-	// 	var tempArray1 = [];
-	// 	var tempArray2 = [];
-	// 	var startIndex = 0;
-	// 	var endIndex = startIndex+12;
-	// 	var initialEnd = 12;
-	// 	for (startIndex; startIndex < initialEnd; startIndex++) {
-	// 		tempArray1[startIndex] = array1[startIndex];
-	// 		tempArray2[startIndex] = array2[startIndex];
-	// 	}
-	// 	rsquared = linearRegression(tempArray1, tempArray2);
-	// 	tempArray1 = [];
-	// 	tempArray2 = [];
-	// 	rsquaredArray.push(rsquared[3]);	//pushes the rsquare value
-	// 	//by the end of this, we should be at startIndex 11
-	// 	for (int i = 12; i < array1.length; i++) {
-	// 		var tempInd = 0;
-	// 		for (int j = startIndex; startIndex < endIndex j++) {
-	// 			tempArray1[tempInd] = array1[startIndex];
-	// 			tempArray2[tempInd] = array2[startIndex];
-	// 			tempInd++;
-	// 		}	// once this is filled up as well...
-	// 		rsquared = linearRegression(tempArray1, tempArray2);
-	// 		tempArray1 = [];
-	// 		tempArray2 = [];
-	// 		rsquaredArray.push(rsquared[3]);
-	// 	}
-	// }
 
 	function calculateRollingRegression(array1, array2) {
 		console.log("INSIDE CALCULATEROLLINGREGRESSION");
@@ -260,26 +222,30 @@
 		var endIndex = startIndex+12;
 		var eqnLine = [];
 
-		//populate rsquaredArray with a year of zeroes
+		//populate rsquaredArray with 12 months of zeroes
 		for (var r = 0; r < 12; r++) {
 			rsquaredArray.push(0);
 		}
-		console.log("rsquaredArray: " + rsquaredArray);
+		// console.log("rsquaredArray: " + rsquaredArray);
 
 		//we do the following 12 times to obtain the first equation
 		for (var i = 0; i < 12; i++) {
 			tempArray1[i] = array1[i];
 			tempArray2[i] = array2[i];
 		}
-		console.log("INITIAL SETUP VALUE OF TEMPARRAYS: " + tempArray1.length + " , " + tempArray2.length);
 		equationLine = linearRegression(tempArray1, tempArray2);
 		rsquared = equationLine[3];	//this should have rsquared
 		rsquaredArray.push(rsquared);
-		console.log("final INITIAL value of rsquaredArray: " + rsquaredArray);
+		// console.log("final INITIAL value of rsquaredArray: " + rsquaredArray);
+		tempArray1 = [];	//restart this shit
+		tempArray2 = [];
 
 		//finally we iterate through the entire thing in stages of 12 currently
+		// THIS IS NOT WORKING...ITERATION IS NOT GOING FORWARD
 		for (var j = 12; j < array1.length; j++) {
 			var tempIndex = 0;
+			console.log("startindex -> " + startIndex + " endIndex -> " + endIndex);
+
 			for (startIndex; startIndex < endIndex; startIndex++) {
 				tempArray1[tempIndex] = array1[startIndex];
 				tempArray2[tempIndex] = array2[startIndex];
@@ -288,14 +254,18 @@
 				}
 				// tempIndex++;
 			}	// at this piont, tempArray should be populated
-			console.log("Size of TempArray 1 and 3 -> " + tempArray1.length + " , " + tempArray2.length);
-			console.log("value: " + tempArray1);
+			// console.log("Size of TempArray 1 and 2 -> " + tempArray1.length + " , " + tempArray2.length);
+			// console.log("value: " + tempArray1);
+			startIndex = startIndex - 11;
+			endIndex++;
 			equationLine = linearRegression(tempArray1, tempArray2);
 			rsquared = equationLine[3];
 			rsquaredArray.push(rsquared);	//now we add the other rsquared
+			// console.log("RSQUARED PUSHED INTO RSQUARED ARRAY -> " + rsquared);
+			// console.log(rsquaredArray);
 		}
-		console.log("Outside of the for loops...check answers");
-		console.log("rSquaredArray values -------> *****");
+		// console.log("Outside of the for loops...check answers");
+		// console.log("rSquaredArray values -------> *****");
 		console.log(rsquaredArray);
 	}
 
@@ -304,7 +274,7 @@
 		for (var i = 0; i < arr.length; i++) {
 			sum += arr[i];
 		}
-		console.log("inside of the SumOfArray function....value of sum is -> " + sum);
+		// console.log("inside of the SumOfArray function....value of sum is -> " + sum);
 		return sum;
 	}
 
@@ -323,6 +293,7 @@
 		// var dates = [];
 		var equationLine = linearRegression(array1, array2);
 		var anotherLine = calculateRollingRegression(array1, array2);
+		console.log("rollingRegression return value -> " + anotherLine);
 
 		var specialArray = [];
 		var extraSpecial = [];
@@ -343,13 +314,13 @@
 		// }
 
 
-		console.log("dates -->");
-		// console.log(<%= @dates %>);
-		console.log("y ----> ");
-		console.log(specialArray[11]);
-		console.log("Special array length -> ")
-		console.log(specialArray.length);
-		console.log("end special array");
+		// console.log("dates -->");
+		// // console.log(<%= @dates %>);
+		// console.log("y ----> ");
+		// console.log(specialArray[11]);
+		// console.log("Special array length -> ")
+		// console.log(specialArray.length);
+		// console.log("end special array");
 
 		for (var special = 0; special < specialArray.length; special++) {
 			console.log("specialArray[special]");
