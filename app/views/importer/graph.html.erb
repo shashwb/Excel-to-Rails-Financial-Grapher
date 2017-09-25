@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Financial Data Tracker</title>
-
-	<script src="http://code.highcharts.com/stock/highstock.js"></script>
-	<script src="https://code.highcharts.com/modules/data.js"></script>
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://www.highcharts.com/samples/data/usdeur.js"></script>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/regression/1.4.0/regression.min.js"></script>
-	<script src="//rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js"> </script>
-	<script src="https://code.highcharts.com/modules/data.js"></script>
-
-	<style>
+<style>
       body {
         background-color: #f2f0e4;
         color: #00667F;
@@ -52,12 +36,8 @@
       	text-align: center;
       	margin-bottom: 50px;
       }
+ </style>
 
-
-
-
-    </style>
-</head>
 <body>
 
 <nav class = "navbar navbar-default" role = "navigation">
@@ -83,9 +63,7 @@
 			Importer
 		</a>
       	</li>
-         <li class="active"><a href = "/graph">Grapher</a></li>
-			
-			
+         <li class="active"><a href = "/graph">Grapher</a></li>	
       </ul>
    </div>
    
@@ -107,12 +85,8 @@
 <div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
 <div id="container1" style="width:100%; height:400px; padding-top: 40px;"></div>
 
-
-
-
 <br>
 
-<!-- <div id="data_description"> -->
 <div id="dataRecieved">
 	<h3>Data Received</h3>
 	<b>Category 1:</b><br> <p class="data"><%= @category1 %></p><br>
@@ -158,16 +132,11 @@
 </div>
 </div>
 	<div id="submit">
-		<!-- a text field made from Ruby tag syntax. We give it the params name ':daterange' -->
-		<!-- and we just give it the normal name 'datarange' THIS IS FOR THE DATERANGE GEM TO WORK-->
-		<!-- the 'daterange' name is captured by JQuery... -->
 		<%= text_field_tag :daterange, "", name: 'daterange', size: 24 %>
 		<%= submit_tag "Redefine search" %>
 	</div>
 
 	<% end %>
-<!-- </div> -->
-
 
 </body>
 
@@ -241,7 +210,6 @@
 		tempArray2 = [];
 
 		//finally we iterate through the entire thing in stages of 12 currently
-		// THIS IS NOT WORKING...ITERATION IS NOT GOING FORWARD
 		for (var j = 12; j < array1.length; j++) {
 			var tempIndex = 0;
 			console.log("startindex -> " + startIndex + " endIndex -> " + endIndex);
