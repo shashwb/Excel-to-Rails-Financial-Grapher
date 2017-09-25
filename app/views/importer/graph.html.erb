@@ -19,12 +19,6 @@
         background-color: #f2f0e4;
         color: #00667F;
       }
-
-/*      #graph_container {
-    	margin-top: 50px;
-    	margin-left: 30%;
-      }*/
-
       #data_description {
       	text-align: center;
       }
@@ -164,6 +158,9 @@
 </div>
 </div>
 	<div id="submit">
+		<!-- a text field made from Ruby tag syntax. We give it the params name ':daterange' -->
+		<!-- and we just give it the normal name 'datarange' THIS IS FOR THE DATERANGE GEM TO WORK-->
+		<!-- the 'daterange' name is captured by JQuery... -->
 		<%= text_field_tag :daterange, "", name: 'daterange', size: 24 %>
 		<%= submit_tag "Redefine search" %>
 	</div>
@@ -179,6 +176,138 @@
 	// console.log("daterangepicker --->");
 	// console.log($('input[name="daterange"]'));
 
+	function linearRegression(arr1, arr2) {
+		console.log("LINEAR EQUATION FUNCTION CALLED");
+		var arr1_size = arr1.length;
+		var arr2_size = arr2.length;
+		console.log("array1 size -> " + arr1_size);
+		console.log("array2 size -> " + arr2_size);
+		if (arr1_size != arr2_size) {
+			alert("Error...exiting");
+		}
+
+		//calculate sums
+		var x_sum = sumOfArray(arr1);
+		var y_sum = sumOfArray(arr2);
+		console.log("x sum -> " + x_sum);
+		console.log("y sum -> " + y_sum);
+		var xx_sum = 0;
+		var xy_sum = 0;
+		var yy_sum = 0;
+
+		console.log("for the for loop... arr1.length -> " + arr1.length);
+
+		for (var i = 0; i < arr1.length; i++) {
+			xx_sum += (arr1[i] * arr1[i]);
+			xy_sum += (arr1[i] * arr2[i]);
+			yy_sum += (arr2[i] * arr2[i]);
+		}
+		console.log("xx -> " + xx_sum + " xy-> " + xy_sum + " yy-> " + yy_sum);
+
+		var slope_m = ((arr1_size * xy_sum) - (x_sum * y_sum)) / ((arr1_size * xx_sum) - (x_sum * x_sum));
+
+		var intercept_b = (y_sum - (slope_m * x_sum)) / arr1_size;
+
+		// DOUBLE CHECK TO MAKE SURE THIS IS CORRECT
+		var r = (xy_sum - ((1/arr1_size) * x_sum * y_sum)) / (Math.sqrt(((xx_sum) - ((1/arr1_size) * (Math.pow(x_sum, 2)))) * ((yy_sum) - ((1/arr1_size) * (Math.pow(y_sum, 2))))));
+
+		var rSquared = r * r;
+
+		var equationArray = [slope_m, intercept_b, r, rSquared];
+
+		console.log(equationArray);
+		return equationArray;
+	}
+
+	// function calculateRollingRegression(array1, array2) {
+	// 	var rsquared = 0;
+	// 	var rsquaredArray = [];	//store the final RSquared values
+	// 	var tempArray1 = [];
+	// 	var tempArray2 = [];
+	// 	var startIndex = 0;
+	// 	var endIndex = startIndex+12;
+	// 	var initialEnd = 12;
+	// 	for (startIndex; startIndex < initialEnd; startIndex++) {
+	// 		tempArray1[startIndex] = array1[startIndex];
+	// 		tempArray2[startIndex] = array2[startIndex];
+	// 	}
+	// 	rsquared = linearRegression(tempArray1, tempArray2);
+	// 	tempArray1 = [];
+	// 	tempArray2 = [];
+	// 	rsquaredArray.push(rsquared[3]);	//pushes the rsquare value
+	// 	//by the end of this, we should be at startIndex 11
+	// 	for (int i = 12; i < array1.length; i++) {
+	// 		var tempInd = 0;
+	// 		for (int j = startIndex; startIndex < endIndex j++) {
+	// 			tempArray1[tempInd] = array1[startIndex];
+	// 			tempArray2[tempInd] = array2[startIndex];
+	// 			tempInd++;
+	// 		}	// once this is filled up as well...
+	// 		rsquared = linearRegression(tempArray1, tempArray2);
+	// 		tempArray1 = [];
+	// 		tempArray2 = [];
+	// 		rsquaredArray.push(rsquared[3]);
+	// 	}
+	// }
+
+	function calculateRollingRegression(array1, array2) {
+		console.log("INSIDE CALCULATEROLLINGREGRESSION");
+		var rsquared = 0;
+		var rsquaredArray = [];
+		var tempArray1 = [];
+		var tempArray2 = [];
+		var startIndex = 1;
+		var endIndex = startIndex+12;
+		var eqnLine = [];
+
+		//populate rsquaredArray with a year of zeroes
+		for (var r = 0; r < 12; r++) {
+			rsquaredArray.push(0);
+		}
+		console.log("rsquaredArray: " + rsquaredArray);
+
+		//we do the following 12 times to obtain the first equation
+		for (var i = 0; i < 12; i++) {
+			tempArray1[i] = array1[i];
+			tempArray2[i] = array2[i];
+		}
+		console.log("INITIAL SETUP VALUE OF TEMPARRAYS: " + tempArray1.length + " , " + tempArray2.length);
+		equationLine = linearRegression(tempArray1, tempArray2);
+		rsquared = equationLine[3];	//this should have rsquared
+		rsquaredArray.push(rsquared);
+		console.log("final INITIAL value of rsquaredArray: " + rsquaredArray);
+
+		//finally we iterate through the entire thing in stages of 12 currently
+		for (var j = 12; j < array1.length; j++) {
+			var tempIndex = 0;
+			for (startIndex; startIndex < endIndex; startIndex++) {
+				tempArray1[tempIndex] = array1[startIndex];
+				tempArray2[tempIndex] = array2[startIndex];
+				if (tempIndex < 12) {
+					tempIndex++;
+				}
+				// tempIndex++;
+			}	// at this piont, tempArray should be populated
+			console.log("Size of TempArray 1 and 3 -> " + tempArray1.length + " , " + tempArray2.length);
+			console.log("value: " + tempArray1);
+			equationLine = linearRegression(tempArray1, tempArray2);
+			rsquared = equationLine[3];
+			rsquaredArray.push(rsquared);	//now we add the other rsquared
+		}
+		console.log("Outside of the for loops...check answers");
+		console.log("rSquaredArray values -------> *****");
+		console.log(rsquaredArray);
+	}
+
+	function sumOfArray(arr) {
+		var sum = 0;
+		for (var i = 0; i < arr.length; i++) {
+			sum += arr[i];
+		}
+		console.log("inside of the SumOfArray function....value of sum is -> " + sum);
+		return sum;
+	}
+
 
 
 	$(function () { 
@@ -190,12 +319,40 @@
 
 		var array1 = <%= @category1_data.inspect.html_safe %>;
 		var array2 = <%= @category2_data.inspect.html_safe %>;
-		// var dates = <%= @dates[6] %>
-		var dates = [];
+		// var dates = <%= @dates %>.to_a;
+		// var dates = [];
+		var equationLine = linearRegression(array1, array2);
+		var anotherLine = calculateRollingRegression(array1, array2);
+
+		var specialArray = [];
+		var extraSpecial = [];
+		var india = 0;
+
+		// specialArray = <%= @timestamps %>
+
+		// for (var fuck = 0; fuck < array1.length; fuck++) {
+			// <% @dates.each do |date| %>
+				// specialArray[india] = <%= date.strftime('%m/%d/%Y') %>
+				// console.log("india->");
+				// console.log(india);
+				// specialArray[india] = <%= date.strftime('%m/%d/%Y') %>;
+				// extraSpecial[india] = new Date(specialArray[india]);
+				// console.log(extraSpecial[india]);
+				// india++;
+			// <% end %>
+		// }
 
 
-		for (var strInd = 0; strInd < array1.length; strInd++) {
-			
+		console.log("dates -->");
+		// console.log(<%= @dates %>);
+		console.log("y ----> ");
+		console.log(specialArray[11]);
+		console.log("Special array length -> ")
+		console.log(specialArray.length);
+		console.log("end special array");
+
+		for (var special = 0; special < specialArray.length; special++) {
+			console.log("specialArray[special]");
 		}
 
 		var final_array = [];
@@ -209,14 +366,13 @@
 
 		for (var j = 0; j < array1.length; j++) {
 			another_array[j] = [array1[j], (array1[j] * m)];
-			// another_array = array1[i] * m;
 		}
 
 		console.log("m (slope): ")
 		console.log(m);
 
-		console.log("dates");
-		console.log(dates);
+		// console.log("dates");
+		// console.log(dates);
 
 		console.log("another_array:");
 		console.log(another_array);
@@ -284,26 +440,6 @@
 	    });
 
 	    console.log("hello");
-		//     $(function() {
-		// 	$('input[name="daterange"]').daterangepicker({
-		// 		"startDate": "<%= @start_date.strftime('%m/%d/%Y') %>",
-		// 		"endDate": "<%= @end_date.strftime('%m/%d/%Y') %>"
-		// 	})
-		// })
-
-		// var xs = [], ys = [];
-
-		// data.forEach(function(d){
-		//    	xs.push(d[0]);
-		//     ys.push(d[1]);
-		// });
-
-		// var x0 = Math.min.apply(null, xs), 
-		//     y0 = m*x0 + b;
-		// var xf = Math.max.apply(null, xs), 
-		//     yf = m*xf + b;
-
-
 
 });
 
