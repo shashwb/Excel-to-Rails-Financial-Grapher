@@ -49,7 +49,11 @@ class ImporterController < ApplicationController
 		@dates = []
 		@newDates = []
 
-		if params[:category1] && params[:category2] && params[:daterange]
+		# if params[:category1] && params[:category2] && params[:daterange]
+			# @months = params[:months]
+		if params[:category1] && params[:category2] && params[:daterange] && params[:month]
+			@months = params[:months]
+
 			@category1 = params[:category1]
 			@category2 = params[:category2]
 
@@ -68,8 +72,6 @@ class ImporterController < ApplicationController
 			@category1_data = FinancialElement.where(name: @category1, day: @chosen_start_date..@chosen_end_date).sort_by(&:day).map{|element| element.model_value}
 			@category2_data = FinancialElement.where(name: @category2, day: @chosen_start_date..@chosen_end_date).sort_by(&:day).map{|element| element.model_value}
 
-			# @newDates = FinancialElement.where(name: @category1, day: @chosen_start_date..@chosen_end_date).sort_by(&:day).map{|element| element.day}
-			# .strftime('%m/%d/%Y')
 
 			if @category1_data.length > @category2_data.length
 				@dates = FinancialElement.where(name: @category1, day: @chosen_start_date..@chosen_end_date).sort_by(&:day).map{|element| element.day}
@@ -86,7 +88,8 @@ class ImporterController < ApplicationController
 				# @indie = @indie + 1
 				# t = Date.new(date).to_time
 				# t += t.utc_offset
-				@timestamps.push(date)
+				#@timestamps.push(date)
+				@timestamps << date.strftime('%d/%m/%Y')
 				@newDates = date;
 			end
 
