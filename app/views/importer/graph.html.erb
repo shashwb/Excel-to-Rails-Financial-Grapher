@@ -181,8 +181,8 @@
 
 	function calculateRollingRegression(array1, array2, months) {
 		var rsquared = 0;
-		var rsquaredArray = [];	//holds all rsquared values
-		var betaArray = [];	//holds all beta values
+		var rsquaredArray = [];	
+		var betaArray = [];	
 		var tempArray1 = [];
 		var tempArray2 = [];
 		var startIndex = 1;
@@ -277,14 +277,8 @@
 		var months = parseInt(months);
 
 		var anotherLine = [];
-		// containers for rsquared and beta values for graphing
 		var regression_array = [];
 		var beta_array = [];
-
-
-		//var equationLine = linearRegression(array1, array2);
-
-		//anotherLine holds two arrays -> regressionArray && betaArray
 		var anotherLine = calculateRollingRegression(array1, array2, months);
 		var regress = [];
 		var betas = [];
@@ -293,18 +287,7 @@
 		var regress = anotherLine.rSquaredArray;
 		var betas = anotherLine.betaArray;
 
-		console.log("regress: ");
-		console.log(regress);
-		console.log("betas: ");
-		console.log(betas);
 
-		//NOT FUCKING WORKING DOOOOE capture the months variable 
-		// var months = <%= @months %>
-		console.log("MONTHS -> ");
-		console.log(months);
-		console.log("months + 3 should equal 15 -> " + (months+3));
-		console.log("MONTHS TYPEOF -> ");
-		console.log(typeof months);
 
 		for (var r = 0; r < regress.length; r++) {
 			regression_array.push([dates[r], regress[r]]);
@@ -313,23 +296,6 @@
 		for (var more = 0; more < betas.length; more++) {
 			beta_array.push([dates[more], betas[more]]);
 		}
-
-		console.log("Regression array");
-		console.log(regression_array);
-		console.log("Betas array");
-		console.log(beta_array);
-
-
-		// var final_array = [];
-		// var another_array = [];
-		// for (var i = 0; i < array1.length; i++) {
-		// 	final_array[i] = [array1[i], array2[i]];
-		// }
-		// var slope = regression('linear', final_array);
-		// var m = slope.equation[0], b = slope.equation[1];
-		// for (var j = 0; j < array1.length; j++) {
-		// 	another_array[j] = [array1[j], (array1[j] * m)];
-		// }
 
 		var myChart1 = Highcharts.chart('container1', {
 	        chart: {
@@ -378,7 +344,20 @@
 	    });
 
 });
+// console.log("Regression array");
+// console.log(regression_array);
+// console.log("Betas array");
+// console.log(beta_array);
 
+// console.log("regress: ");
+// console.log(regress);
+// console.log("betas: ");
+// console.log(betas);
+// console.log("MONTHS -> ");
+// console.log(months);
+// console.log("months + 3 should equal 15 -> " + (months+3));
+// console.log("MONTHS TYPEOF -> ");
+// console.log(typeof months);
 
 
 
