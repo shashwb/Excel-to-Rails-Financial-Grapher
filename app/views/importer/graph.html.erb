@@ -71,6 +71,13 @@
 <div id="container" style="width:100%; height:400px; padding-top: 40px;"></div>
 <div id="container1" style="width:100%; height:400px; padding-top: 40px;"></div>
 
+<div id="" style="display: inline-block; margin-left: 33%">
+	<h2 style="text-align: center; padding-bottom: 30px; float: left;">Rolling Regression Value:</h2>
+	<h2 style="text-align: center; color: #e87642; float: left; padding-left: 10px;"><p><%= @months %> Months</p></h2>
+	<br>
+</div>
+
+
 <br>
 <h1 style="text-align: center; padding-bottom: 30px;">Current Raw Data Recieved</h1>
 
@@ -172,9 +179,6 @@
 		return equationArray;
 	}
 
-	/*
-		EVERYTHING WORKS except for some slight indexes that are off
-	*/
 	function calculateRollingRegression(array1, array2, months) {
 		var rsquared = 0;
 		var rsquaredArray = [];	//holds all rsquared values
@@ -183,22 +187,19 @@
 		var tempArray2 = [];
 		var startIndex = 1;
 		var twelve = months;
-		var endIndex = startIndex+12;
+		var endIndex = startIndex+months;	//changed
 		var eqnLine = [];
-		console.log("MONTHS ----> " + months);
-		var numVal = parseInt(months);
-		console.log("MONTHS (after parseInt) -----> " + numVal);
 		//populate rsquaredArray with 12 months of zeroes
-		for (var r = 0; r < 12; r++) {
+		for (var r = 0; r < months; r++) {	//changed
 			betaArray.push(0);
 		}
-		for (var rsq = 0; rsq < 12; rsq++) {
+		for (var rsq = 0; rsq < months; rsq++) { //changed
 			rsquaredArray.push(0);
 		}
 		// console.log("rsquaredArray: " + rsquaredArray);
 
 		//we do the following 12 times to obtain the first equation
-		for (var i = 0; i < 12; i++) {
+		for (var i = 0; i < months; i++) { //changed
 			tempArray1[i] = array1[i];
 			tempArray2[i] = array2[i];
 		}
@@ -212,14 +213,14 @@
 		tempArray2 = [];
 
 		//finally we iterate through the entire thing in stages of 12 currently
-		for (var j = 12; j < array1.length; j++) {
+		for (var j = months; j < array1.length; j++) {	//changed
 			var tempIndex = 0;
 			console.log("startindex -> " + startIndex + " endIndex -> " + endIndex);
 
 			for (startIndex; startIndex < endIndex; startIndex++) {
 				tempArray1[tempIndex] = array1[startIndex];
 				tempArray2[tempIndex] = array2[startIndex];
-				if (tempIndex < 11) {
+				if (tempIndex < months-1) {
 					tempIndex++;
 				}
 				// tempIndex++;
@@ -227,7 +228,7 @@
 			// console.log("Size of TempArray 1 and 2 -> " + tempArray1.length + " , " + tempArray2.length);
 			// console.log("value: " + tempArray1);
 			// console.log("startIndex after for loop -> " + startIndex);
-			startIndex = startIndex - (12-1);
+			startIndex = startIndex - (months-1);
 			// console.log("startIndex after decrement and ready for next -> " + startIndex);
 			endIndex++;
 			equationLine = linearRegression(tempArray1, tempArray2);
@@ -273,6 +274,7 @@
 		var array2 = <%= @category2_data.inspect.html_safe %>;
 		var dates = <%= @timestamps.inspect.html_safe %>;
 		var months = <%= @months.inspect.html_safe %>
+		var months = parseInt(months);
 
 		var anotherLine = [];
 		// containers for rsquared and beta values for graphing
@@ -300,6 +302,9 @@
 		// var months = <%= @months %>
 		console.log("MONTHS -> ");
 		console.log(months);
+		console.log("months + 3 should equal 15 -> " + (months+3));
+		console.log("MONTHS TYPEOF -> ");
+		console.log(typeof months);
 
 		for (var r = 0; r < regress.length; r++) {
 			regression_array.push([dates[r], regress[r]]);
@@ -335,11 +340,10 @@
 	        	enabled: true
 	        },
 	        title: {
-	            text: 'Overall Exante Data Financial Time Series'
+	            text: 'R Squared and Beta Values'
 	        },
 	        xAxis: {
 	            text: 'Time Series',
-	            // type: 'datetime',
 	            type: 'category'
 	        },
 	        series: [{
@@ -363,7 +367,7 @@
 	        	enabled: true
 	        },
 	        title: {
-	            text: 'Overall Exante Data Financial Time Series'
+	            text: 'All Time Series'
 	        },
 	        xAxis: {
 	            text: 'Time Series'

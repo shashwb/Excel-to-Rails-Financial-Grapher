@@ -2,24 +2,11 @@
 <html>
 <head>
 	<title>Financial Data Tracker</title>
-	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
-<!-- 	<script src="http://code.highcharts.com/stock/highstock.js"></script>
-	<script src="https://code.highcharts.com/modules/data.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://www.highcharts.com/samples/data/usdeur.js"></script>
-
-	<script src="https://code.highcharts.com/modules/drilldown.js"></script> -->
-
 	<style>
       body {
         background-color: #f2f0e4;
         color: #00667F;
       }
-
-
     </style>
 </head>
 
@@ -38,8 +25,7 @@
       <a class = "navbar-brand" href = "#">Data Tracker</a>
    </div>
    
-   <div class = "collapse navbar-collapse" id = "example-navbar-collapse">
-	
+   <div class = "collapse navbar-collapse" id = "example-navbar-collapse">	
       <ul class = "nav navbar-nav">
       	<li class = "active">
       		<a href="/importer">
@@ -47,9 +33,7 @@
 			Importer
 		</a>
       	</li>
-         <li><a href = "/graph">Grapher</a></li>
-			
-			
+         <li><a href = "/graph">Grapher</a></li>		
       </ul>
    </div>
    
@@ -92,16 +76,12 @@
 			<% link_to "Grapher", '/graph' %>
 			<button class= 'btn btn-primary-lrg'>Enter Grapher</button>
 		</a>
-
 	</div>
 
-
 	<h1 style="text-align: center; padding-bottom: 30px;">Current State of the Database</h1>
-
 	<div style="text-align: center; margin-bottom: 100px;">
 			<button id="database-button" class='btn btn-primary-lrg'>Toggle Database View</button>
 	</div>
-
 	<div id="database">
 	<table style="text-align: center; width: 100%;">
 		<tr style="text-align: center;">
@@ -119,22 +99,16 @@
 	</table>
 	</div>
 
-
 </body>
-
 
 <script>
 
 	$(function () { 
-
 		$('#container2').hide();
 		$('#database').hide();
-
-
 		$('#subButton').on('click', function() {
 			$('#container2').toggle();
 		})
-
 		$('#database-button').on('click', function() {
 			$('#database').toggle();
 		})
