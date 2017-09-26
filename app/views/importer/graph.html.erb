@@ -3,35 +3,23 @@
         background-color: #f2f0e4;
         color: #00667F;
       }
-      #data_description {
-      	text-align: center;
-      }
-
-      .data {
-      	color: #e87642;
-      }
-
+      #data_description { text-align: center; }
+      .data { color: #e87642; }
+      #timeSeriesForm { text-align: center; }
       #dataRecieved {
       	padding-left: 25%;
       	padding-right: 25%;
       }
-
       #center_divs {
       	display: table;
       	width: 100%;
       }
-
       #center_divs > div {
       	text-align: center;
       	display: table-cell;
       	padding: 1em;
       	width: 50%;
       }
-
-      #timeSeriesForm {
-      	text-align: center;
-      }
-
       #submit {
       	text-align: center;
       	margin-bottom: 50px;
@@ -49,13 +37,11 @@
          <span class = "icon-bar"></span>
          <span class = "icon-bar"></span>
          <span class = "icon-bar"></span>
-      </button>
-		
+      </button>	
       <a class = "navbar-brand" href = "#">Data Tracker</a>
    </div>
    
    <div class = "collapse navbar-collapse" id = "example-navbar-collapse">
-	
       <ul class = "nav navbar-nav">
       	<li>
       		<a href="/importer">
@@ -86,6 +72,11 @@
 <div id="container1" style="width:100%; height:400px; padding-top: 40px;"></div>
 
 <br>
+<h1 style="text-align: center; padding-bottom: 30px;">Current Raw Data Recieved</h1>
+
+	<div style="text-align: center; margin-bottom: 100px;">
+			<button id="data-button" class='btn btn-primary-lrg'>Toggle Raw Data Recieved View</button>
+	</div>
 
 <div id="dataRecieved">
 	<h3>Data Received</h3>
@@ -143,6 +134,9 @@
 
 <script type="text/javascript">
 
+	$('#dataRecieved').hide();
+	$('#data-button').on('click', function() { $('#dataRecieved').toggle(); })
+
 
 	function linearRegression(arr1, arr2) {
 		// console.log("LINEAR EQUATION FUNCTION CALLED");
@@ -153,8 +147,8 @@
 		}
 		var x_sum = sumOfArray(arr1);
 		var y_sum = sumOfArray(arr2);
-		console.log("x sum -> " + x_sum);
-		console.log("y sum -> " + y_sum);
+		// console.log("x sum -> " + x_sum);
+		// console.log("y sum -> " + y_sum);
 		var xx_sum = 0;
 		var xy_sum = 0;
 		var yy_sum = 0;
@@ -167,17 +161,14 @@
 		// console.log("xx -> " + xx_sum + " xy-> " + xy_sum + " yy-> " + yy_sum);
 
 		var slope_m = ((arr1_size * xy_sum) - (x_sum * y_sum)) / ((arr1_size * xx_sum) - (x_sum * x_sum));
-
 		var intercept_b = (y_sum - (slope_m * x_sum)) / arr1_size;
 
 		// DOUBLE CHECK TO MAKE SURE THIS IS CORRECT
 		var r = (xy_sum - ((1/arr1_size) * x_sum * y_sum)) / (Math.sqrt(((xx_sum) - ((1/arr1_size) * (Math.pow(x_sum, 2)))) * ((yy_sum) - ((1/arr1_size) * (Math.pow(y_sum, 2))))));
-
 		var rSquared = r * r;
-
 		var equationArray = [slope_m, intercept_b, r, rSquared];
 
-		console.log(equationArray);
+		// console.log(equationArray);
 		return equationArray;
 	}
 
@@ -187,7 +178,8 @@
 	function calculateRollingRegression(array1, array2) {
 		// console.log("INSIDE CALCULATEROLLINGREGRESSION");
 		var rsquared = 0;
-		var rsquaredArray = [];
+		var rsquaredArray = [];	//holds all rsquared values
+		var betaArray = [];	//holds all beta values
 		var tempArray1 = [];
 		var tempArray2 = [];
 		var startIndex = 1;
@@ -197,6 +189,7 @@
 		//populate rsquaredArray with 12 months of zeroes
 		for (var r = 0; r < 11; r++) {
 			rsquaredArray.push(0);
+			betaArray.push(0);
 		}
 		// console.log("rsquaredArray: " + rsquaredArray);
 
@@ -207,7 +200,9 @@
 		}
 		equationLine = linearRegression(tempArray1, tempArray2);
 		rsquared = equationLine[3];	//this should have rsquared
+		betaValue = equationLine[0];	//this should be the slope_m...
 		rsquaredArray.push(rsquared);
+		betaArray.push(betaValue);
 		// console.log("final INITIAL value of rsquaredArray: " + rsquaredArray);
 		tempArray1 = [];	//restart this shit
 		tempArray2 = [];
@@ -231,14 +226,22 @@
 			endIndex++;
 			equationLine = linearRegression(tempArray1, tempArray2);
 			rsquared = equationLine[3];
+			betaValue = equationLine[0];
 			rsquaredArray.push(rsquared);	//now we add the other rsquared
+			betaArray.push(betaValue);
 			// console.log("RSQUARED PUSHED INTO RSQUARED ARRAY -> " + rsquared);
 			// console.log(rsquaredArray);
 		}
 		// console.log("Outside of the for loops...check answers");
 		// console.log("rSquaredArray values -------> *****");
+		console.log("RSQUAREDARRAY: ");
 		console.log(rsquaredArray);
-		return rsquaredArray;
+		console.log("BETA VALUE: ");
+		console.log(betaArray);
+		return {
+			rSquaredArray: rsquaredArray,
+			betaArray: betaArray
+		};
 	}
 
 	function sumOfArray(arr) {
@@ -259,37 +262,62 @@
 			"endDate": <%= @end_date.strftime('%m/%d/%Y') %>
 		})
 
+		//category1, category2 and dates array populated
 		var array1 = <%= @category1_data.inspect.html_safe %>;
 		var array2 = <%= @category2_data.inspect.html_safe %>;
 		var dates = <%= @timestamps.inspect.html_safe %>;
-		var anotherLine = [];
-		var regression_array = [];
-		var equationLine = linearRegression(array1, array2);
-		var anotherLine = calculateRollingRegression(array1, array2);
-		var months = <%= @months %>
-		console.log("MONTHS -> " + months);
-		// console.log("rollingRegression return value -> " + anotherLine);
 
-		for (var r = 0; r < anotherLine.length; r++) {
-			regression_array.push([dates[r], anotherLine[r]]);
+		var anotherLine = [];
+		// containers for rsquared and beta values for graphing
+		var regression_array = [];
+		var beta_array = [];
+
+
+		//var equationLine = linearRegression(array1, array2);
+
+		//anotherLine holds two arrays -> regressionArray && betaArray
+		var anotherLine = calculateRollingRegression(array1, array2);
+		var regress = [];
+		var betas = [];
+
+		//populate the regress and betas temporary arrays
+		var regress = anotherLine.rSquaredArray;
+		var betas = anotherLine.betaArray;
+
+		console.log("regress: ");
+		console.log(regress);
+		console.log("betas: ");
+		console.log(betas);
+
+		//NOT FUCKING WORKING DOOOOE capture the months variable 
+		var months = <%= @months %>
+		console.log("MONTHS -> ");
+		console.log(months);
+
+		for (var r = 0; r < regress.length; r++) {
+			regression_array.push([dates[r], regress[r]]);
+		}
+
+		for (var more = 0; more < betas.length; more++) {
+			beta_array.push([dates[more], betas[more]]);
 		}
 
 		console.log("Regression array");
 		console.log(regression_array);
+		console.log("Betas array");
+		console.log(beta_array);
 
 
-		var final_array = [];
-		var another_array = [];
-		for (var i = 0; i < array1.length; i++) {
-			final_array[i] = [array1[i], array2[i]];
-		}
-		var slope = regression('linear', final_array);
-
-		var m = slope.equation[0], b = slope.equation[1];
-
-		for (var j = 0; j < array1.length; j++) {
-			another_array[j] = [array1[j], (array1[j] * m)];
-		}
+		// var final_array = [];
+		// var another_array = [];
+		// for (var i = 0; i < array1.length; i++) {
+		// 	final_array[i] = [array1[i], array2[i]];
+		// }
+		// var slope = regression('linear', final_array);
+		// var m = slope.equation[0], b = slope.equation[1];
+		// for (var j = 0; j < array1.length; j++) {
+		// 	another_array[j] = [array1[j], (array1[j] * m)];
+		// }
 
 		var myChart1 = Highcharts.chart('container1', {
 	        chart: {
@@ -319,13 +347,13 @@
     
             }
             , {
-            	regression: true,
-            	regressionSettings: {
-            		type: 'linear',
-            		color: 'rgba(133, 44, 11, .9',
-            	},
+            	// regression: true,
+            	// regressionSettings: {
+            	// 	type: 'linear',
+            	// 	color: 'rgba(133, 44, 11, .9',
+            	// },
             	name: 'Beta Value',
-            	data: another_array
+            	data: beta_array
             }
             ]
 	    });
