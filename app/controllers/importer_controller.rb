@@ -51,15 +51,16 @@ class ImporterController < ApplicationController
 
 		# if params[:category1] && params[:category2] && params[:daterange]
 			# @months = params[:months]
-		if params[:category1] && params[:category2] && params[:daterange] && params[:month]
-			@months = params[:months]
-
+		if params[:category1] && params[:category2] && params[:daterange]
+			# && params[:months]
 			@category1 = params[:category1]
-			@category2 = params[:category2]
+			@category2 = params[:category2] 
 
 			split_dates = params[:daterange].split(' - ')
 			@chosen_start_date = Date.strptime(split_dates[0], '%m/%d/%Y')
 			@chosen_end_date = Date.strptime(split_dates[1], '%m/%d/%Y')
+
+			@months = params[:month]
 
 			#category1_data_records = FinancialElement.where(name: @category1, day: @chosen_start_date..@chosen_end_date).sort_by(&:day)
 			#@category1_data = []

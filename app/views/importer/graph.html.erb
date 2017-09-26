@@ -163,8 +163,8 @@
 		var slope_m = ((arr1_size * xy_sum) - (x_sum * y_sum)) / ((arr1_size * xx_sum) - (x_sum * x_sum));
 		var intercept_b = (y_sum - (slope_m * x_sum)) / arr1_size;
 
-		// DOUBLE CHECK TO MAKE SURE THIS IS CORRECT
 		var r = (xy_sum - ((1/arr1_size) * x_sum * y_sum)) / (Math.sqrt(((xx_sum) - ((1/arr1_size) * (Math.pow(x_sum, 2)))) * ((yy_sum) - ((1/arr1_size) * (Math.pow(y_sum, 2))))));
+
 		var rSquared = r * r;
 		var equationArray = [slope_m, intercept_b, r, rSquared];
 
@@ -175,26 +175,30 @@
 	/*
 		EVERYTHING WORKS except for some slight indexes that are off
 	*/
-	function calculateRollingRegression(array1, array2) {
-		// console.log("INSIDE CALCULATEROLLINGREGRESSION");
+	function calculateRollingRegression(array1, array2, months) {
 		var rsquared = 0;
 		var rsquaredArray = [];	//holds all rsquared values
 		var betaArray = [];	//holds all beta values
 		var tempArray1 = [];
 		var tempArray2 = [];
 		var startIndex = 1;
+		var twelve = months;
 		var endIndex = startIndex+12;
 		var eqnLine = [];
-
+		console.log("MONTHS ----> " + months);
+		var numVal = parseInt(months);
+		console.log("MONTHS (after parseInt) -----> " + numVal);
 		//populate rsquaredArray with 12 months of zeroes
-		for (var r = 0; r < 11; r++) {
-			rsquaredArray.push(0);
+		for (var r = 0; r < 12; r++) {
 			betaArray.push(0);
+		}
+		for (var rsq = 0; rsq < 12; rsq++) {
+			rsquaredArray.push(0);
 		}
 		// console.log("rsquaredArray: " + rsquaredArray);
 
 		//we do the following 12 times to obtain the first equation
-		for (var i = 0; i < 11; i++) {
+		for (var i = 0; i < 12; i++) {
 			tempArray1[i] = array1[i];
 			tempArray2[i] = array2[i];
 		}
@@ -208,9 +212,9 @@
 		tempArray2 = [];
 
 		//finally we iterate through the entire thing in stages of 12 currently
-		for (var j = 11; j < array1.length; j++) {
+		for (var j = 12; j < array1.length; j++) {
 			var tempIndex = 0;
-			// console.log("startindex -> " + startIndex + " endIndex -> " + endIndex);
+			console.log("startindex -> " + startIndex + " endIndex -> " + endIndex);
 
 			for (startIndex; startIndex < endIndex; startIndex++) {
 				tempArray1[tempIndex] = array1[startIndex];
@@ -222,7 +226,9 @@
 			}	// at this piont, tempArray should be populated
 			// console.log("Size of TempArray 1 and 2 -> " + tempArray1.length + " , " + tempArray2.length);
 			// console.log("value: " + tempArray1);
-			startIndex = startIndex - 10;
+			// console.log("startIndex after for loop -> " + startIndex);
+			startIndex = startIndex - (12-1);
+			// console.log("startIndex after decrement and ready for next -> " + startIndex);
 			endIndex++;
 			equationLine = linearRegression(tempArray1, tempArray2);
 			rsquared = equationLine[3];
@@ -266,6 +272,7 @@
 		var array1 = <%= @category1_data.inspect.html_safe %>;
 		var array2 = <%= @category2_data.inspect.html_safe %>;
 		var dates = <%= @timestamps.inspect.html_safe %>;
+		var months = <%= @months.inspect.html_safe %>
 
 		var anotherLine = [];
 		// containers for rsquared and beta values for graphing
@@ -276,7 +283,7 @@
 		//var equationLine = linearRegression(array1, array2);
 
 		//anotherLine holds two arrays -> regressionArray && betaArray
-		var anotherLine = calculateRollingRegression(array1, array2);
+		var anotherLine = calculateRollingRegression(array1, array2, months);
 		var regress = [];
 		var betas = [];
 
@@ -290,7 +297,7 @@
 		console.log(betas);
 
 		//NOT FUCKING WORKING DOOOOE capture the months variable 
-		var months = <%= @months %>
+		// var months = <%= @months %>
 		console.log("MONTHS -> ");
 		console.log(months);
 
@@ -336,22 +343,11 @@
 	            type: 'category'
 	        },
 	        series: [{
-                // regression: true ,
-                // regressionSettings: {
-                //     type: 'linear',
-                //     color:  'rgba(223, 83, 83, .9)',
-                //     name: "%eq | r2: %r |"
-                // },
                 name: 'Regression Value',
                 data: regression_array
     
             }
             , {
-            	// regression: true,
-            	// regressionSettings: {
-            	// 	type: 'linear',
-            	// 	color: 'rgba(133, 44, 11, .9',
-            	// },
             	name: 'Beta Value',
             	data: beta_array
             }
